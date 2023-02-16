@@ -1,5 +1,9 @@
-import 'package:e_seal_app/Screens/Home.dart';
+import 'dart:convert';
+import 'package:e_seal_app/Module/json_response.dart';
+import 'package:e_seal_app/Screens/Setting_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'Start_Screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -9,6 +13,48 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final _formKey = GlobalKey<FormState>();
+  String usingurl = "$predefurl/Account/AndroidLogin";
+  final _usernamecontroller = TextEditingController();
+  final _passwordcontroller = TextEditingController();
+  String _errortext = "";
+  JsonResponse jsonResponse = JsonResponse();
+
+  Future login() async {
+    try {
+      final String username = _usernamecontroller.text;
+      final String password = _passwordcontroller.text;
+
+      final response = await http.post(Uri.parse(usingurl),
+          headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+          body: jsonEncode({'UserName': username, 'Password': password}));
+      final Map<String, dynamic> data = jsonDecode(response.body);
+      final user = JsonResponse.fromJson(data);
+      if (response.statusCode == 200) {
+        print(response.body);
+        if (user.status == 1) {
+          Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (context) => StartScreen()));
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text("Incorrect Password or Username"),
+            backgroundColor: Colors.red,
+          ));
+        }
+      } else {
+        _errortext = jsonDecode(response.body)['message'];
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(_errortext),
+          backgroundColor: Colors.red,
+        ));
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,54 +99,75 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    TextField(
-                      decoration: InputDecoration(
-                          labelText: "Username",
-                          hintText: "Enter Your Username",
-                          hintStyle: TextStyle(fontFamily: 'Calibri'),
-                          labelStyle: TextStyle(
-                              fontFamily: 'Calibri',
-                              color: Color.fromARGB(255, 12, 15, 87)),
-                          enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Color.fromARGB(255, 12, 15, 87),
-                                  width: 1.5)),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Color.fromARGB(255, 14, 17, 107),
-                                width: 2.0),
-                          )),
-                    ),
-                    SizedBox(
-                      height: 18.0,
-                    ),
-                    TextField(
-                      decoration: InputDecoration(
-                          labelText: "Password",
-                          hintText: "Enter Your Password",
-                          hintStyle: TextStyle(fontFamily: 'Calibri'),
-                          labelStyle: TextStyle(
-                              fontFamily: 'Calibri',
-                              color: Color.fromARGB(255, 12, 15, 87)),
-                          enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Color.fromARGB(255, 12, 15, 87),
-                                  width: 1.5)),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Color.fromARGB(255, 14, 17, 107),
-                                width: 2.0),
-                          )),
+                    Form(
+                      key: _formKey,
+                      child: Column(
+                        children: [
+                          TextFormField(
+                            controller: _usernamecontroller,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return "Please enter Username";
+                              }
+                              return null;
+                            },
+                            decoration: InputDecoration(
+                                labelText: "Username",
+                                hintText: "Enter Your Username",
+                                hintStyle: TextStyle(fontFamily: 'Calibri'),
+                                labelStyle: TextStyle(
+                                    fontFamily: 'Calibri',
+                                    color: Color.fromARGB(255, 12, 15, 87)),
+                                enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Color.fromARGB(255, 12, 15, 87),
+                                        width: 1.5)),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Color.fromARGB(255, 14, 17, 107),
+                                      width: 2.0),
+                                )),
+                          ),
+                          SizedBox(
+                            height: 18.0,
+                          ),
+                          TextFormField(
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return "Please enter Password";
+                              }
+                              return null;
+                            },
+                            obscureText: true,
+                            controller: _passwordcontroller,
+                            decoration: InputDecoration(
+                                labelText: "Password",
+                                hintText: "Enter Your Password",
+                                hintStyle: TextStyle(fontFamily: 'Calibri'),
+                                labelStyle: TextStyle(
+                                    fontFamily: 'Calibri',
+                                    color: Color.fromARGB(255, 12, 15, 87)),
+                                enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Color.fromARGB(255, 12, 15, 87),
+                                        width: 1.5)),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Color.fromARGB(255, 14, 17, 107),
+                                      width: 2.0),
+                                )),
+                          ),
+                        ],
+                      ),
                     ),
                     SizedBox(
                       height: 30.0,
                     ),
                     ElevatedButton(
                         onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => HomeScreen()));
+                          if (_formKey.currentState!.validate()) {
+                            login();
+                          }
                         },
                         style: ElevatedButton.styleFrom(
                             backgroundColor: Color.fromARGB(255, 12, 15, 87),
@@ -117,7 +184,12 @@ class _LoginScreenState extends State<LoginScreen> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         InkWell(
-                          onTap: () {},
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Settings()));
+                          },
                           child: ClipRect(
                             child: Image.asset(
                               'assets/setting.png',

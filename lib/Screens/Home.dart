@@ -1,5 +1,10 @@
+import 'package:e_seal_app/Screens/End_trip.dart';
+import 'package:e_seal_app/Screens/Start_trip.dart';
+import 'package:e_seal_app/Screens/Un_sync_Data.dart';
 import 'package:e_seal_app/Widgets/Elevated_button.dart';
 import 'package:flutter/material.dart';
+
+import 'Register_container.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -22,6 +27,12 @@ class _HomeScreenState extends State<HomeScreen> {
               fontSize: 30.0),
         ),
         backgroundColor: Colors.white,
+        leading: IconButton(
+            onPressed: () {},
+            icon: Icon(
+              Icons.arrow_back,
+              color: Colors.white,
+            )),
       ),
       body: SingleChildScrollView(
           child: Container(
@@ -116,12 +127,12 @@ class _HomeScreenState extends State<HomeScreen> {
               height: 10.0,
             ),
             Container(
-              height: 350.0,
+              height: 310.0,
               width: double.infinity,
               child: Card(
                 elevation: 1.0,
                 child: Padding(
-                  padding: const EdgeInsets.all(15.0),
+                  padding: const EdgeInsets.fromLTRB(15.0, 25.0, 15.0, 20.0),
                   child: Column(
                     children: <Widget>[
                       Homebutton(
@@ -133,9 +144,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                 fontSize: 23.0,
                                 color: Colors.white),
                           ),
-                          ontapp: () {}),
+                          ontapp: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        ContainerRegistration()));
+                          }),
                       SizedBox(
-                        height: 8.0,
+                        height: 9.0,
                       ),
                       Homebutton(
                           child: Text(
@@ -146,9 +163,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                 fontSize: 23.0,
                                 color: Colors.white),
                           ),
-                          ontapp: () {}),
+                          ontapp: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => StartTrip()));
+                          }),
                       SizedBox(
-                        height: 8.0,
+                        height: 9.0,
                       ),
                       Homebutton(
                           child: Text(
@@ -159,22 +181,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                 fontSize: 23.0,
                                 color: Colors.white),
                           ),
-                          ontapp: () {}),
+                          ontapp: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => EndTrip()));
+                          }),
                       SizedBox(
-                        height: 8.0,
-                      ),
-                      Homebutton(
-                          child: Text(
-                            "Sync Data",
-                            style: TextStyle(
-                                fontFamily: 'Calibri',
-                                fontWeight: FontWeight.bold,
-                                fontSize: 23.0,
-                                color: Colors.white),
-                          ),
-                          ontapp: () {}),
-                      SizedBox(
-                        height: 8.0,
+                        height: 9.0,
                       ),
                       Homebutton(
                           child: Text(
@@ -185,7 +199,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                 fontSize: 23.0,
                                 color: Colors.white),
                           ),
-                          ontapp: () {})
+                          ontapp: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => UnsyncData()));
+                          })
                     ],
                   ),
                 ),

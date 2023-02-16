@@ -1,6 +1,8 @@
 import 'package:e_seal_app/Widgets/cards_for_account.dart';
 import 'package:flutter/material.dart';
 
+import 'Setting_screen.dart';
+
 class MenuScreen extends StatefulWidget {
   const MenuScreen({super.key});
 
@@ -22,6 +24,12 @@ class _MenuScreenState extends State<MenuScreen> {
               fontFamily: 'Calibri',
               fontSize: 27.0),
         ),
+        leading: IconButton(
+            onPressed: () {},
+            icon: Icon(
+              Icons.arrow_back,
+              color: Colors.white,
+            )),
       ),
       body: SingleChildScrollView(
         child: Container(
@@ -76,31 +84,7 @@ class _MenuScreenState extends State<MenuScreen> {
               clickablecard(
                   ontapp: () {},
                   child: Text(
-                    "View Logs",
-                    style: TextStyle(
-                        fontFamily: 'Calibri',
-                        fontSize: 15.0,
-                        color: Color.fromARGB(255, 12, 15, 87)),
-                  )),
-              SizedBox(
-                height: 5.0,
-              ),
-              clickablecard(
-                  ontapp: () {},
-                  child: Text(
                     "Backup",
-                    style: TextStyle(
-                        fontFamily: 'Calibri',
-                        fontSize: 15.0,
-                        color: Color.fromARGB(255, 12, 15, 87)),
-                  )),
-              SizedBox(
-                height: 5.0,
-              ),
-              clickablecard(
-                  ontapp: () {},
-                  child: Text(
-                    "Clear Logs",
                     style: TextStyle(
                         fontFamily: 'Calibri',
                         fontSize: 15.0,
@@ -279,7 +263,12 @@ class _MenuScreenState extends State<MenuScreen> {
                     child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                             backgroundColor: Color.fromARGB(255, 12, 15, 87)),
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Settings()));
+                        },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
